@@ -25,7 +25,7 @@
 //  IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import <HTAutocompleteTextField/HTAutocompleteTextField.h>
 
 /**
  * `JVFloatLabeledTextField` is a `UITextField` subclass that implements the "Float Label Pattern".
@@ -40,7 +40,7 @@
  *
  * Credits for the concept to Matt D. Smith (@mds), and his original design:  http://mattdsmith.com/float-label-pattern/
  */
-@interface JVFloatLabeledTextField : UITextField
+@interface JVFloatLabeledTextField : HTAutocompleteTextField
 
 /**
  * Read-only access to the floating label.
@@ -97,6 +97,10 @@
  * Defaults to 0.3 seconds.
  */
 @property (nonatomic, assign) NSTimeInterval floatingLabelHideAnimationDuration UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic, strong) UIColor * placeholderColor UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic, assign) CGFloat xOffsetForClearButton UI_APPEARANCE_SELECTOR;
 
 /**
  *  Sets the placeholder and the floating title

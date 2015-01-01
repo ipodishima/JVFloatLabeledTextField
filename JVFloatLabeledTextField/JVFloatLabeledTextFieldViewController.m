@@ -75,6 +75,7 @@ const static CGFloat kJVFieldFloatingLabelFontSize = 11.0f;
     titleField.attributedPlaceholder =
     [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Title", @"")
                                     attributes:@{NSForegroundColorAttributeName: [UIColor darkGrayColor]}];
+    titleField.placeholderColor = [UIColor redColor];
     titleField.font = [UIFont systemFontOfSize:kJVFieldFontSize];
     titleField.floatingLabel.font = [UIFont boldSystemFontOfSize:kJVFieldFloatingLabelFontSize];
     titleField.floatingLabelTextColor = floatingLabelColor;

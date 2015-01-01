@@ -66,6 +66,8 @@
     _animateEvenIfNotFirstResponder = NO;
     _floatingLabelShowAnimationDuration = kFloatingLabelShowAnimationDuration;
     _floatingLabelHideAnimationDuration = kFloatingLabelHideAnimationDuration;
+    _placeholderColor = [UIColor grayColor];
+    
     [self setFloatingLabelText:self.placeholder];
 }
 
@@ -165,6 +167,24 @@
 
 #pragma mark - UITextField
 
+- (void)drawPlaceholderInRect:(CGRect)rect
+{
+    if ([self.placeholder respondsToSelector:@selector(drawInRect:withAttributes:)]) { // iOS7 and later
+        NSDictionary *attributes = @{NSForegroundColorAttributeName: _placeholderColor,
+                                     NSFontAttributeName: self.font};
+        
+        CGRect boundingRect = [self.placeholder boundingRectWithSize:rect.size options:0 attributes:attributes context:nil];
+        [self.placeholder drawAtPoint:CGPointMake(0.0f, (rect.size.height / 2.0f) - boundingRect.size.height / 2.0f) withAttributes:attributes];
+    } else {
+        // iOS 6
+        [_placeholderColor setFill];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        [self.placeholder drawInRect:rect withFont:self.font lineBreakMode:NSLineBreakByTruncatingTail alignment:self.textAlignment];
+#pragma clang diagnostic pop
+    }
+}
+
 - (void)setPlaceholder:(NSString *)placeholder
 {
     [super setPlaceholder:placeholder];
@@ -189,7 +209,7 @@
     if ([self.text length]) {
         CGFloat topInset = ceilf(_floatingLabel.font.lineHeight + _placeholderYPadding);
         topInset = MIN(topInset, [self maxTopInset]);
-        rect = UIEdgeInsetsInsetRect(rect, UIEdgeInsetsMake(topInset, 0.0f, 0.0f, 0.0f));
+        rect = UIEdgeInsetsInsetRect(rect, UIEdgeInsetsMake(topInset, self.xOffsetForClearButton, 0.0f, 0.0f));
     }
     return CGRectIntegral(rect);
 }
