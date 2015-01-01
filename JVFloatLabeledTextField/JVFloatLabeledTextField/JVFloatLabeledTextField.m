@@ -203,25 +203,36 @@
     [self setFloatingLabelText:floatingTitle];
 }
 
-- (CGRect)textRectForBounds:(CGRect)bounds
-{
-    CGRect rect = [super textRectForBounds:bounds];
-    if ([self.text length]) {
-        CGFloat topInset = ceilf(_floatingLabel.font.lineHeight + _placeholderYPadding);
-        topInset = MIN(topInset, [self maxTopInset]);
-        rect = UIEdgeInsetsInsetRect(rect, UIEdgeInsetsMake(topInset, self.xOffsetForClearButton, 0.0f, 0.0f));
-    }
-    return CGRectIntegral(rect);
-}
-
-- (CGRect)editingRectForBounds:(CGRect)bounds
-{
-    CGRect rect = [super editingRectForBounds:bounds];
+- (CGRect) applyOffsetOnTextRectIfNeeded:(CGRect)rect {
     if ([self.text length]) {
         CGFloat topInset = ceilf(_floatingLabel.font.lineHeight + _placeholderYPadding);
         topInset = MIN(topInset, [self maxTopInset]);
         rect = UIEdgeInsetsInsetRect(rect, UIEdgeInsetsMake(topInset, 0.0f, 0.0f, 0.0f));
     }
+    
+    return rect;
+}
+
+- (CGRect)textRectForBounds:(CGRect)bounds
+{
+    CGRect rect = [super textRectForBounds:bounds];
+    rect = [self applyOffsetOnTextRectIfNeeded:rect];
+    return CGRectIntegral(rect);
+}
+
+- (CGRect) applyOffsetOnEditingTextRectIfNeeded:(CGRect)rect {
+    if ([self.text length]) {
+        CGFloat topInset = ceilf(_floatingLabel.font.lineHeight + _placeholderYPadding);
+        topInset = MIN(topInset, [self maxTopInset]);
+        rect = UIEdgeInsetsInsetRect(rect, UIEdgeInsetsMake(topInset, 0.0f, 0.0f, 0.0f));
+    }
+    return rect;
+}
+
+- (CGRect)editingRectForBounds:(CGRect)bounds
+{
+    CGRect rect = [super editingRectForBounds:bounds];
+    rect = [self applyOffsetOnEditingTextRectIfNeeded:rect];
     return CGRectIntegral(rect);
 }
 
@@ -231,7 +242,7 @@
     if ([self.text length]) {
         CGFloat topInset = ceilf(_floatingLabel.font.lineHeight + _placeholderYPadding);
         topInset = MIN(topInset, [self maxTopInset]);
-        rect = CGRectMake(rect.origin.x, rect.origin.y + topInset / 2.0f, rect.size.width, rect.size.height);
+        rect = CGRectMake(CGRectGetWidth(self.frame) - CGRectGetWidth(rect) + self.xOffsetForClearButton, rect.origin.y + topInset / 2.0f, rect.size.width, rect.size.height);
     }
     return CGRectIntegral(rect);
 }
