@@ -170,11 +170,17 @@
 - (void)drawPlaceholderInRect:(CGRect)rect
 {
     if ([self.placeholder respondsToSelector:@selector(drawInRect:withAttributes:)]) { // iOS7 and later
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        [paragraphStyle setAlignment:self.textAlignment];
+        
         NSDictionary *attributes = @{NSForegroundColorAttributeName: _placeholderColor,
+                                     NSParagraphStyleAttributeName: paragraphStyle,
                                      NSFontAttributeName: self.font};
         
         CGRect boundingRect = [self.placeholder boundingRectWithSize:rect.size options:0 attributes:attributes context:nil];
-        [self.placeholder drawAtPoint:CGPointMake(0.0f, (rect.size.height / 2.0f) - boundingRect.size.height / 2.0f) withAttributes:attributes];
+        CGRect drawRect = rect;
+        drawRect.origin.y = (rect.size.height / 2.0f) - boundingRect.size.height / 2.0f;
+        [self.placeholder drawInRect:drawRect withAttributes:attributes];
     } else {
         // iOS 6
         [_placeholderColor setFill];
